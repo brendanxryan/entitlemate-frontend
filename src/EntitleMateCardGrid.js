@@ -1,18 +1,19 @@
 import { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 
-// Basic input and button styling
-const Input = (props) => <input {...props} />;
+const Input = (props) => <input {...props} className="border border-gray-300 p-2 rounded w-full max-w-xl" />;
 const Button = ({ children, onClick, variant }) => (
   <button
     onClick={onClick}
-    className={variant === 'default' ? 'active' : ''}
+    className={`px-3 py-1 rounded border text-sm font-medium ${
+      variant === 'default' ? 'bg-blue-600 text-white' : 'bg-white text-black border-gray-400'
+    }`}
   >
     {children}
   </button>
 );
-const Card = ({ children }) => <div className="card">{children}</div>;
-const CardContent = ({ children }) => <div>{children}</div>;
+const Card = ({ children }) => <div className="border rounded shadow bg-white p-4">{children}</div>;
+const CardContent = ({ children }) => <div className="space-y-2">{children}</div>;
 
 const SHEET_URL = 'https://api.sheetbest.com/sheets/6b9a06de-35b8-4983-865d-54518ebdf66a';
 
@@ -90,14 +91,14 @@ export default function EntitleMateCardGrid() {
   };
 
   return (
-    <div>
+    <div className="p-6 space-y-4 bg-gray-50 min-h-screen">
       <Input
         placeholder="Search entitlements, strategies, or age bands (e.g. 67-75)..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      <div className="filter-bar">
+      <div className="flex flex-wrap gap-2">
         {ageOptions.map(opt => (
           <Button
             key={opt}
@@ -110,7 +111,7 @@ export default function EntitleMateCardGrid() {
       </div>
 
       {multiSelectFields.filter(f => f !== 'AgeGroup').map(field => (
-        <div key={field} className="filter-bar">
+        <div key={field} className="flex flex-wrap gap-2">
           {options[field].map(opt => (
             <Button
               key={opt}
@@ -123,18 +124,18 @@ export default function EntitleMateCardGrid() {
         </div>
       ))}
 
-      <div className="grid">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredItems.map((item, i) => (
           <Card key={i}>
             <CardContent>
-              <h2>{item.Name}</h2>
-              <p><strong>{item.Headline}</strong></p>
-              <p>{item.Description}</p>
+              <h2 className="text-lg font-semibold">{item.Name}</h2>
+              <p className="text-sm text-gray-600">{item.Headline}</p>
+              <p className="text-sm">{item.Description}</p>
               {item.ValueEstimate && (
-                <p><strong>Estimated value:</strong> ${item.ValueEstimate}</p>
+                <p className="text-sm font-bold">Estimated value: ${item.ValueEstimate}</p>
               )}
               {item.GovLink && (
-                <p><a href={item.GovLink} target="_blank" rel="noreferrer">Gov Link</a></p>
+                <a href={item.GovLink} target="_blank" rel="noreferrer" className="text-blue-600 underline text-sm">Gov Link</a>
               )}
             </CardContent>
           </Card>
